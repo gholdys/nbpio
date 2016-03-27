@@ -12,6 +12,7 @@ The first provides a special project wizard for PlatformIO projects, the second 
 Quickstart
 ----------
 To take advantage of this plugin set, install PlatformIO Project and SerialMonitor (PureJavaComm will be installed automatially as a dependency) and then:
+
 1. In the main menu go to "File" -> "New Project".
 2. Select "PlatformIO" in the "Categories" section.
 3. Fill in the project form.
