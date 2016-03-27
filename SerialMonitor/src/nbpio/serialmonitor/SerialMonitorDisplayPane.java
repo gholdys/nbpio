@@ -78,13 +78,15 @@ public class SerialMonitorDisplayPane extends JPanel {
         try {
             communicator.connect( 
                 (reconnected) -> {
+                    String formattedMessage = null;
                     if ( reconnected ) {                        
-                        printNotificationLine( getLocalizedText("reconnectedNotification") );
+                        String rawMessage = getLocalizedText("reconnectedNotification");
+                        formattedMessage = MessageFormat.format( rawMessage, communicator.getConfig().getPortName() );
                     } else {
                         String rawMessage = getLocalizedText("connectedNotification");
-                        String formattedMessage = MessageFormat.format( rawMessage, communicator.getConfig().getPortName() );
-                        printNotificationLine( formattedMessage );
-                    }                    
+                        formattedMessage = MessageFormat.format( rawMessage, communicator.getConfig().getPortName() );                        
+                    }
+                    printNotificationLine( formattedMessage );
                 },
                 (is) -> {
                     try {                    

@@ -283,10 +283,10 @@ public class NbpioWizardSetupStep implements WizardDescriptor.Panel, WizardDescr
         WizardDescriptor d  = (WizardDescriptor) settings;
         String name = projectNameTextField.getText().trim();
         String folder = createdFolderTextField.getText().trim();
-        String board = ((BoardDefinition) boardCombo.getSelectedItem()).getType();
+        Object board = boardCombo.getSelectedItem();
         d.putProperty("projdir", new File(folder));
         d.putProperty("name", name);
-        d.putProperty("board", board);
+        d.putProperty("board", (board instanceof BoardDefinition) ? ((BoardDefinition) board).getType() : null);
     }
 
     @Override

@@ -63,32 +63,45 @@ public final class PlatformIO {
         Map <String,List<BoardDefinition>> ret = new HashMap<>();        
         List <BoardDefinition> currentPlatformBoards = new ArrayList<>();
         BoardDefinition.Builder boardBuilder = new BoardDefinition.Builder();
-        while ( (line = reader.readLine()) != null ) {
-            if ( line.startsWith( PLATFORM_TOKEN ) ) {
-                String currentPlatform = line.substring(PLATFORM_TOKEN.length()).trim();
-                currentPlatformBoards = new ArrayList<>();
-                LOGGER.log(Level.INFO, "Parsing platform: {0}", currentPlatform);
-                ret.put(currentPlatform, currentPlatformBoards);
-            } else if ( !line.startsWith("-") && !line.startsWith("Type") ) {
-                String[] tokens = line.split("\\s+");
-                if ( tokens.length > 1 ) {
-                    LOGGER.log(Level.INFO, "Parsing board: {0}", line);
-                    StringBuilder b = new StringBuilder();
-                    for ( int i=5; i<tokens.length; i++ ) {
-                        b.append( tokens[i] ).append(" ");
-                    }                    
-                    currentPlatformBoards.add( 
-                        boardBuilder
-                            .type( tokens[0] )
-                            .MCU( tokens[1] )
-                            .frequency( tokens[2] )
-                            .flash( tokens[3] )
-                            .RAM( tokens[4] )
-                            .name( b.toString().trim() )
-                            .build()
-                    );
+        boolean parsingPlatform = false;
+        try {
+            while ( (line = reader.readLine()) != null ) {
+                line = line.trim();
+                if ( line.startsWith( PLATFORM_TOKEN ) ) {
+                    String currentPlatform = line.substring(PLATFORM_TOKEN.length()).trim();
+                    currentPlatformBoards = new ArrayList<>();
+                    LOGGER.log(Level.INFO, "Parsing platform: {0}", currentPlatform);
+                    ret.put(currentPlatform, currentPlatformBoards);
+                    parsingPlatform = true;
+                } else if ( parsingPlatform ) {
+                    if ( line.isEmpty() ) {
+                        parsingPlatform = false;
+                    } else if ( !line.startsWith("-") && !line.startsWith("Type") ) {
+                        String[] tokens = line.split("\\s+");
+                        if ( tokens.length > 1 ) {
+                            LOGGER.log(Level.INFO, "Parsing board: {0}", line);
+                            StringBuilder b = new StringBuilder();
+                            for ( int i=5; i<tokens.length; i++ ) {
+                                b.append( tokens[i] ).append(" ");
+                            }
+                            currentPlatformBoards.add(
+                                    boardBuilder
+                                            .type( tokens[0] )
+                                            .MCU( tokens[1] )
+                                            .frequency( tokens[2] )
+                                            .flash( tokens[3] )
+                                            .RAM( tokens[4] )
+                                            .name( b.toString().trim() )
+                                            .build()
+                            );
+                        }
+                    }
                 }
             }
+        } catch (IOException ex) {
+            throw ex;
+        } finally {
+            reader.close();
         }
         return ret;
     }
