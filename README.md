@@ -23,5 +23,7 @@ To take advantage of this plugin set, install PlatformIO Project and SerialMonit
 
 The SerialMonitor component can be opened by navigating to "Window" -> "IDE Tools" and selecting "Serial Monitor" (somewhere at the end of the list).
 
+Take a look at [link](nbpio-demo.mp4) nbpio-demo.mp4 file for a short demonstration.
+
 _Currently, the plugins have been tested only on Linux_
 
