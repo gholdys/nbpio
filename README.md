@@ -21,3 +21,4 @@ To take advantage of this plugin set, install PlatformIO Project and SerialMonit
 7. The upload command from PlatformIO has been mapped to the IDE's "Run" command, so to upload the project select "run" -> "Run Project" or press F6.
 
 The SerialMonitor component can be opened by navigating to "Window" -> "IDE Tools" and selecting "Serial Monitor" (somewhere at the end of the list).
+
