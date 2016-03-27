@@ -1,4 +1,4 @@
-package nbpio;
+package nbpio.project;
 
 import static javax.swing.GroupLayout.DEFAULT_SIZE;
 import static javax.swing.GroupLayout.PREFERRED_SIZE;

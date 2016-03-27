@@ -1,4 +1,4 @@
-package nbpio;
+package nbpio.project;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,8 +40,10 @@ public final class PlatformIO {
         File srcDir = new File( projectRoot, "src" );
         srcDir.mkdirs();
         File sourceFile = new File( srcDir, sourceFilename );
-        sourceFile.createNewFile();
-        addFileToProject(sourceFileStream, sourceFile);
+        if ( !sourceFile.exists() ) {
+            sourceFile.createNewFile();
+            addFileToProject(sourceFileStream, sourceFile);
+        }
         return sourceFile;
     }
     

@@ -1,4 +1,4 @@
-package nbpio;
+package nbpio.project;
 
 import java.awt.Component;
 import java.io.File;
@@ -18,7 +18,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
-@TemplateRegistration(folder = "Project/PlatformIO", position = Integer.MAX_VALUE, displayName = "#nbpio_displayName", description = "NbpioDescription.html", iconBase = "nbpio/nbpio.png")
+@TemplateRegistration(folder = "Project/PlatformIO", position = Integer.MAX_VALUE, displayName = "#nbpio_displayName", description = "NbpioDescription.html", iconBase = "nbpio/project/nbpio.png")
 @Messages("nbpio_displayName=PlatformIO Project")
 public class NbpioWizardIterator implements WizardDescriptor.InstantiatingIterator {
 

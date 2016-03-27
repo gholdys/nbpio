@@ -1,7 +1,7 @@
-package nbpio.integration;
+package nbpio.project.integration;
 
-import nbpio.BoardDefinition;
-import nbpio.PlatformIO;
+import nbpio.project.BoardDefinition;
+import nbpio.project.PlatformIO;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;

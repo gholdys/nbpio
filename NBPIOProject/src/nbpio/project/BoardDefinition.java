@@ -1,4 +1,4 @@
-package nbpio;
+package nbpio.project;
 
 public final class BoardDefinition {
 

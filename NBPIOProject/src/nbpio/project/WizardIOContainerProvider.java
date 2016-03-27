@@ -1,4 +1,4 @@
-package nbpio;
+package nbpio.project;
 
 import java.awt.BorderLayout;
 import javax.swing.Action;
