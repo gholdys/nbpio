@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <confs>
+    <conf name="Default" type="0">
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>platformio -f -c netbeans run --target upload</runcommandpicklistitem>
+          <runcommandpicklistitem>platformio -f -c netbeans run --target program</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>platformio -f -c netbeans run --target upload</runcommand>        
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

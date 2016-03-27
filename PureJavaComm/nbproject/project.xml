@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>purejavacomm</code-name-base>
+            <suite-component/>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.jna</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <implementation-version/>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.jna.platform</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <implementation-version/>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <public-packages>
+                <package>jtermios</package>
+                <package>jtermios.freebsd</package>
+                <package>jtermios.linux</package>
+                <package>jtermios.macosx</package>
+                <package>jtermios.solaris</package>
+                <package>jtermios.testsuite</package>
+                <package>jtermios.windows</package>
+                <package>jtermios.windows.testsuite</package>
+                <package>purejavacomm</package>
+                <package>purejavacomm.example</package>
+                <package>purejavacomm.testsuite</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/purejavacomm-1.0.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/purejavacomm-1.0.0.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>
