@@ -11,7 +11,7 @@ The first provides a special project wizard for PlatformIO projects, the second 
 
 Quickstart
 ----------
-First of all, you need to have [PlatformIO CLI](platformio.org) installed on your system. For a complete guide on how to do that click [here](http://docs.platformio.org/en/latest/installation.html). 
+First of all, you need to have [PlatformIO CLI](http://platformio.org/get-started/cli) installed on your system. For a complete guide on how to do that click [here](http://docs.platformio.org/en/latest/installation.html). 
 
 Once you have PlatformIO installed it is time to get going with NBPIO plugin. To take advantage of this plugin set, install PlatformIO Project and SerialMonitor (PureJavaComm will be installed automatially as a dependency) and then:
 
