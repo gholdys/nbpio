@@ -17,11 +17,6 @@ import org.openide.util.Exceptions;
 
 public final class PlatformIO {
     
-    
-    public static enum RunCommand {
-        DO_NOTHING, UPLOAD, PROGRAM
-    } 
-    
     private static final Logger LOGGER = Logger.getLogger( PlatformIO.class.getName() );
     
     private static final String PLATFORM_TOKEN = "Platform:";
@@ -106,6 +101,10 @@ public final class PlatformIO {
         return ret;
     }
     
+    
+    // ******************************************************
+    // ************* PRIVATE HELPER METHODS *****************
+    // ******************************************************
     private static void addFileToProject( InputStream sourceStream, File destFile ) throws IOException {        
         OutputStream destStream = null;
         try {            
@@ -121,8 +120,7 @@ public final class PlatformIO {
                 Exceptions.printStackTrace(ex);
             }
         }     
-    }
-    
+    }    
     
     private static void copy(InputStream is, OutputStream os) throws IOException {
         final byte[] buffer = new byte[65536];
