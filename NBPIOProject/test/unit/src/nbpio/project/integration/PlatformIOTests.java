@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import nbpio.project.LibraryDefinition;
 import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -46,16 +47,18 @@ public class PlatformIOTests {
     }
 
     @Test
-    public void should_create_a_new_platformio_project() throws IOException, InterruptedException {
+    public void should_create_a_new_platformio_project_and_verify_platform() throws IOException, InterruptedException {
         // Given
         String projectDirPath = tempDir.toString();
-
+        String platform = "atmelavr";
+        
         // When
         Process p = PlatformIO.startProjectInitProcess("uno", projectDirPath);
         p.waitFor();
 
         // Then
-        assertTrue("PlatformIO command failed! Error code: " + p.exitValue(), p.exitValue() == 0);
+        assertTrue( "PlatformIO command failed! Error code: " + p.exitValue(), p.exitValue() == 0 );
+        assertEquals( "Wrong project platform!", platform, PlatformIO.getProjectPlatform( new File(projectDirPath) ) );
     }
 
     @Test
@@ -92,6 +95,32 @@ public class PlatformIOTests {
         assertTrue( "Config file contents is not correct!", Arrays.equals( Files.readAllBytes( configFile.toPath() ), configFileContents) );
     }
 
+    @Test
+    public void should_parse_libraries_list() throws IOException {
+        /*
+        [
+            {
+             "name": "Adafruit_HTU21DF", 
+             "repository": {"url": "https://github.com/adafruit/Adafruit_HTU21DF_Library.git", "type": "git"}, 
+             "frameworks": ["arduino"], 
+             "platforms": ["atmelavr", "atmelsam", "teensy"], 
+             "version": "512b79e199", 
+             "authors": [{"url": "https://github.com/adafruit", "maintainer": false, "name": "Adafruit Industries", "email": null}], 
+             "keywords": ["sensor", "humidity", "temperature", "i2c"], 
+             "id": 566, 
+             "description": "Library for the HTU21D-F humidity and temperature sensors"
+            }
+        ]
+        */
+        
+        List <LibraryDefinition> libraries = PlatformIO.createLibrariesList();
+        for ( LibraryDefinition libraryDefinition : libraries ) {
+            System.out.println( Arrays.toString( libraryDefinition.getPlatforms()) );
+            System.out.println( libraryDefinition.getRepository().getUrl() );
+            System.out.println( libraryDefinition.getAuthors()[0].getName() );
+        }
+    }
+    
     private static void removeDirectoryTree( Path dir ) {
         try {
             Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {

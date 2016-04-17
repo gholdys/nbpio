@@ -31,6 +31,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
@@ -79,6 +81,7 @@ public class NbpioWizardSetupStep implements WizardDescriptor.Panel, WizardDescr
         platformCombo.setEnabled( false );
         platformCombo.setSelectedIndex(0);
         platformCombo.addItemListener( (evt) -> rebuildBoardCombo() );
+        AutoCompleteDecorator.decorate(platformCombo); 
         
         boardLabel = new JLabel();
         boardCombo = new JComboBox<Object>( new String[] {"Select Platform"} ) {
@@ -100,6 +103,12 @@ public class NbpioWizardSetupStep implements WizardDescriptor.Panel, WizardDescr
         };
         boardCombo.setEnabled( false );
         boardCombo.setSelectedIndex(0);
+        AutoCompleteDecorator.decorate(boardCombo, new ObjectToStringConverter() {
+            @Override
+            public String getPreferredStringForItem(Object value) {
+                return ( value instanceof BoardDefinition ) ? ((BoardDefinition) value).getName() : value.toString();
+            }            
+        });
         
         Box.Filler filler = new Box.Filler(new Dimension(0, 5), new Dimension(0, 5), new Dimension(0, 5));
         
