@@ -10,13 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import nbpio.project.LibraryDefinition;
 import org.junit.After;
 import org.junit.Test;
@@ -103,41 +100,25 @@ public class PlatformIOTests {
         /*
         [
             {
-                "updated": "2016-02-23T10:50:02Z", 
-                "description": "Arduino library for HDC1000 and HDC1008 sensors", 
-                "frameworks": ["arduino"], 
-                "dlmonth": 2, 
-                "examplenums": 1, 
-                "authornames": ["Adafruit Industries"], 
-                "platforms": ["atmelavr", "atmelsam"], 
-                "keywords": ["sensor", "humidity", "temperature"], 
-                "id": 1102, 
-                "name": "Adafruit-HDC1000"
+             "name": "Adafruit_HTU21DF", 
+             "repository": {"url": "https://github.com/adafruit/Adafruit_HTU21DF_Library.git", "type": "git"}, 
+             "frameworks": ["arduino"], 
+             "platforms": ["atmelavr", "atmelsam", "teensy"], 
+             "version": "512b79e199", 
+             "authors": [{"url": "https://github.com/adafruit", "maintainer": false, "name": "Adafruit Industries", "email": null}], 
+             "keywords": ["sensor", "humidity", "temperature", "i2c"], 
+             "id": 566, 
+             "description": "Library for the HTU21D-F humidity and temperature sensors"
             }
         ]
         */
         
-        List <LibraryDefinition> libraries = PlatformIO.listInstalledLibraries();
+        List <LibraryDefinition> libraries = PlatformIO.createLibrariesList();
         for ( LibraryDefinition libraryDefinition : libraries ) {
-            assertNotNull( libraryDefinition.getId() );
-            assertNotNull( libraryDefinition.getName() );            
-            assertNotNull( libraryDefinition.getAuthors() );            
-            assertNotNull( libraryDefinition.getPlatforms() );
+            System.out.println( Arrays.toString( libraryDefinition.getPlatforms()) );
+            System.out.println( libraryDefinition.getRepository().getUrl() );
+            System.out.println( libraryDefinition.getAuthors()[0].getName() );
         }
-    }
-    
-    @Test
-    public void should_find_libraries_with_given_search_term() throws IOException, InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
-        List <LibraryDefinition> allResults = new ArrayList<>();
-        PlatformIO.startLibrarySearch("humidity", (r) -> {
-            allResults.addAll( r.getResults() );
-            if ( r.isComplete() ) {
-                latch.countDown();
-            }
-        });
-        latch.await(5, TimeUnit.SECONDS);
-        assertTrue( allResults.size() > 0 );
     }
     
     private static void removeDirectoryTree( Path dir ) {

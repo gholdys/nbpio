@@ -10,12 +10,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -113,7 +112,7 @@ public final class PlatformIO {
         return ret;
     }
     
-    public static List<LibraryDefinition> listInstalledLibraries() throws IOException {        
+    public static List<LibraryDefinition> createLibrariesList() throws IOException {        
         Process p = new ProcessBuilder().command( PLATFORMIO_COMMAND, "-f", "-c", "netbeans", "lib", "list", "--json-output" ).start();                
         
         BufferedReader reader = new BufferedReader( new InputStreamReader( p.getInputStream() ) );
@@ -123,7 +122,7 @@ public final class PlatformIO {
             Object jsonObject = parser.parse( reader );
             if ( jsonObject instanceof JSONArray ) {
                 JSONArray array = (JSONArray) jsonObject;
-                array.forEach( (e) -> ret.add( parseFullLibraryJSONObject((JSONObject) e) ) );
+                array.forEach( (e) -> ret.add( parseLibraryJSONObject((JSONObject) e) ) );
             }
         } catch (ParseException ex) {
             LOGGER.log(Level.SEVERE, "Failed to parse libraries list", ex);
@@ -135,42 +134,18 @@ public final class PlatformIO {
         return ret;
     }
     
-    public static void startLibrarySearch( String searchTerm, Consumer<SearchResults<LibraryDefinition>> partialResultsConsumer ) {
-        CompletableFuture.runAsync( () -> {
-            try {
-                int page = 1;
-                while ( true ) {
-                    Process p = new ProcessBuilder().command( PLATFORMIO_COMMAND, "-c", "netbeans", "lib", "search", "--json-output", "--page", ""+page, searchTerm ).start();
-                    SearchResults r = parseSearchResults( p.getInputStream() );
-                    if ( partialResultsConsumer != null ) {
-                        partialResultsConsumer.accept(r);
-                    }
-                    if ( r.isComplete() ) {
-                        break;
-                    }
-                    page++;
-                }
-            } catch (IOException ex) {
-                LOGGER.log( Level.SEVERE, "Failed to run PlatformIO process", ex );
-            }
-        } );
-    }
-        
-    public static LibraryDefinition parseShortLibraryJSONObject( JSONObject obj ) {
-        String name = getStringFromJSON(obj, "name");
-        LOGGER.info( "Short parsing " + name );
-        return new LibraryDefinition.Builder()
-            .name( name )                
-            .id( getIntegerFromJSON(obj, "id") )            
-            .description( getStringFromJSON(obj, "description") )            
-            .build();
+    // TODO: Use PlatformIO "search" function instead of going through listed libraries
+    public static List<LibraryDefinition> findMatchingLibraries( String searchTerm ) throws IOException {
+        String lowerCaceSearchWord = searchTerm.toLowerCase();
+        List <LibraryDefinition> allLibs = createLibrariesList();
+        return allLibs.stream().filter( (lib) -> {
+            return lib.getName().toLowerCase().contains(lowerCaceSearchWord) || lib.getDescription().toLowerCase().contains(lowerCaceSearchWord);
+        }).collect( Collectors.toList() );
     }
     
-    public static LibraryDefinition parseFullLibraryJSONObject( JSONObject obj ) {
-        String name = getStringFromJSON(obj, "name");
-        LOGGER.info( "Fully parsing " + name );
+    public static LibraryDefinition parseLibraryJSONObject( JSONObject obj ) {
         return new LibraryDefinition.Builder()
-            .name( name )                
+            .name( getStringFromJSON(obj, "name") )
             .repository( getRepositoryDefinitionFromJSON(obj, "repository") )
             .frameworks( getStringArrayFromJSON(obj, "frameworks") )
             .platforms( getStringArrayFromJSON(obj, "platforms") )
@@ -208,35 +183,6 @@ public final class PlatformIO {
     // ******************************************************
     // ************* PRIVATE HELPER METHODS *****************
     // ******************************************************    
-    private static SearchResults<LibraryDefinition> parseSearchResults( InputStream resultsStream ) throws IOException {
-        JSONParser parser = new JSONParser();
-        List <LibraryDefinition> partialResults = new ArrayList<>();
-        int page = 0;
-        int total = 1;
-        int perpage = 0;
-        
-        try (BufferedReader reader = new BufferedReader( new InputStreamReader( resultsStream ) ) ) {
-            Object obj = parser.parse( reader );
-            if ( obj instanceof JSONObject ) {
-                JSONObject jsonObj = (JSONObject) obj;
-                JSONArray items = (JSONArray) jsonObj.get("items");
-                if ( items != null ) {                    
-                    items.forEach( (e) -> partialResults.add( parseShortLibraryJSONObject((JSONObject) e) ) );
-                    total = Integer.parseInt( jsonObj.getOrDefault("total", "1").toString() );
-                    page = Integer.parseInt( jsonObj.getOrDefault("page", "0").toString() );
-                    perpage = Integer.parseInt( jsonObj.getOrDefault("perpage", "0").toString() );
-                }
-            }
-        } catch (ParseException ex) {
-            LOGGER.log(Level.SEVERE, "Failed to parse libraries list", ex);
-            return new SearchResults<LibraryDefinition>(null, 0f);
-        }
-        
-        float progress = Math.min( 1f, 1f*(page*perpage)/total );
-        
-        return new SearchResults<LibraryDefinition>(partialResults, progress);
-    }
-    
     private static File getProjectIniFile( File projectRoot ) throws FileNotFoundException {
         File iniFile = new File( projectRoot, INI_FILENAME);
         if ( iniFile.exists() ) {
