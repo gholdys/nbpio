@@ -1,5 +1,6 @@
 NetBeans Plugin for PlatformIO
 ==============================
+__(NOTE: This project is no longer being developed)__
 
 NBPIO is a plugin suite for Netbeans 8.1 that provides easy integration of PlatformIO within the IDE. It consists of three plugins:
 
